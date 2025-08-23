@@ -1,0 +1,17 @@
+services:
+  homework-mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: homework_portal
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 12345
+    ports:
+      - "33061:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql-init:/docker-entrypoint-initdb.d
+volumes:
+  mysql_data:
