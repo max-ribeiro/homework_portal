@@ -8,7 +8,7 @@ Os **coordenadores** são responsáveis apenas pela criação de novos usuários
 
 ## 🚀 Tecnologias
 
-- [PHP 8.2+](https://www.php.net/)  
+- [PHP 8.4+](https://www.php.net/)  
 - [Laravel 12](https://laravel.com/)  
 - [MySQL 8+](https://www.mysql.com/)  
 - Composer  
