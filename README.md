@@ -1,61 +1,121 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📘 Portal de Atividades Escolares
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema desenvolvido em **Laravel 12** para gerenciar as atividades escolares.  
+O objetivo é permitir que **professores** cadastrem suas atividades diretamente no portal, e que **alunos e pais** possam acompanhar as demandas e manter tudo em dia.  
+Os **coordenadores** são responsáveis apenas pela criação de novos usuários e pelo gerenciamento geral das atividades.  
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Tecnologias
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [PHP 8.2+](https://www.php.net/)  
+- [Laravel 12](https://laravel.com/)  
+- [MySQL 8+](https://www.mysql.com/)  
+- Composer  
+- Docker (opcional, mas recomendado)  
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 📂 Estrutura do Banco
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+O sistema possui as seguintes entidades principais:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **users** → Todos os usuários do sistema (professores, coordenadores, alunos, pais).  
+- **user_types** → Define os tipos de usuário (professor, coordenador, aluno, pai).  
+- **grades** → Séries/anos escolares.  
+- **sections** → Seções dentro de cada ano/série (ex: A, B, C).  
+- **classes** → Combinação de série + seção (ex: 5º Ano A).  
+- **subjects** → Disciplinas (Matemática, História, etc).  
+- **files** → Arquivos anexados às atividades.  
+- **activities** → Atividades criadas pelos professores (com prazo, descrição e arquivos).  
+- **activities_n_classes** → Pivot: vincula atividades a uma ou mais turmas.  
+- **users_has_activities** → Pivot: vincula usuários às atividades (ex: professor responsável).  
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## ⚙️ Instalação
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Clone o repositório:
 
-### Premium Partners
+```bash
+git clone https://github.com/seu-usuario/nome-do-projeto.git
+cd nome-do-projeto
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Instale as dependências:
 
-## Contributing
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Copie o arquivo `.env.example`:
 
-## Code of Conduct
+```bash
+cp .env.example .env
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Gere a chave do Laravel:
 
-## Security Vulnerabilities
+```bash
+php artisan key:generate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Configure o `.env` com suas credenciais do MySQL:
 
-## License
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=escola_db
+DB_USERNAME=root
+DB_PASSWORD=secret
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 🗄️ Migrations
+
+Crie o banco de dados e rode as migrations:
+
+```bash
+php artisan migrate
+```
+
+Se quiser popular com dados iniciais (tipos de usuário e um coordenador administrador):
+
+```bash
+php artisan db:seed
+```
+
+---
+
+## 🔑 Usuários iniciais
+
+O seeder cria os seguintes tipos de usuário por padrão:
+
+- **Coordenador** → cria e gerencia usuários, supervisiona atividades no geral.  
+- **Professor** → pode cadastrar atividades vinculadas às suas turmas e disciplinas.  
+- **Aluno/Pai** → acesso somente para acompanhar atividades e demandas escolares.  
+
+---
+
+## ▶️ Executar o servidor
+
+```bash
+php artisan serve
+```
+
+Acesse em: [http://localhost:8000](http://localhost:8000)
+
+---
+
+## 📌 Rotas principais
+
+- `/login` → Autenticação de usuários.  
+- `/dashboard` → Painel inicial (diferente para cada tipo de usuário).  
+- `/atividades` → Professores podem cadastrar novas atividades.  
+- `/minhas-atividades` → Alunos e pais podem acompanhar atividades.  
+- `/usuarios` → Coordenadores podem criar e gerenciar contas.  
+
+---
+
